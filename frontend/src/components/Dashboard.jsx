@@ -48,10 +48,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Device chart showing temperature and humidity over time */}
       <DeviceChart deviceData={deviceData} />
 
-      {/* Display device cards */}
       {deviceData.length > 0 ? (
         deviceData.map(device => (
           <DeviceCard key={device._id} device={device} />
