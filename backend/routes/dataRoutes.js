@@ -2,16 +2,12 @@ const express = require('express');
 const router = express.Router();
 const DeviceData = require('../models/DeviceData');
 
-// Middleware for try/catch handling
+// middleware for try/catch handling
 const asyncHandler = fn => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 
-/**
- * @route   GET /api/data/latest
- * @desc    Get latest device readings
- * @access  Public
- */
+// Get latest device readings
 router.get('/latest', asyncHandler(async (req, res) => {
   const limit = req.query.limit ? parseInt(req.query.limit) : 10;
   const deviceId = req.query.deviceId;
@@ -28,21 +24,13 @@ router.get('/latest', asyncHandler(async (req, res) => {
   res.json({ success: true, count: data.length, data });
 }));
 
-/**
- * @route   GET /api/data/devices
- * @desc    Get list of all unique devices
- * @access  Public
- */
+// Get list of all unique devices
 router.get('/devices', asyncHandler(async (req, res) => {
   const devices = await DeviceData.distinct('deviceId');
   res.json({ success: true, count: devices.length, data: devices });
 }));
 
-/**
- * @route   POST /api/data
- * @desc    Add new device reading
- * @access  Public
- */
+// Add new device reading
 router.post('/', asyncHandler(async (req, res) => {
   const { deviceId, temperature, humidity, status } = req.body;
   
@@ -65,11 +53,7 @@ router.post('/', asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, data: savedReading });
 }));
 
-/**
- * @route   DELETE /api/data/:id
- * @desc    Delete a specific reading
- * @access  Public (would typically be restricted in production)
- */
+// Delete a specific reading
 router.delete('/:id', asyncHandler(async (req, res) => {
   const reading = await DeviceData.findById(req.params.id);
   
